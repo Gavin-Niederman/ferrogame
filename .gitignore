@@ -1,0 +1,5 @@
+ferrogame/target
+ferrogame/Cargo.lock
+sandbox/target
+sandbox/Cargo.lock
+.vscode
