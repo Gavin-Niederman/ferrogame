@@ -1,3 +1,6 @@
+use ferrogame::application::Application;
+
 fn main() {
-    println!("Hello, world!");
+    let sandbox = Application::new();
+    sandbox.run();
 }
