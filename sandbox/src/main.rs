@@ -1,6 +1,4 @@
-use ferrogame::application::Application;
-
 fn main() {
-    let sandbox = Application::new();
+    let sandbox = ferrogame::Application::new();
     sandbox.run();
 }
