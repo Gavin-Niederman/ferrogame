@@ -1,4 +1,4 @@
 fn main() {
-    let sandbox = ferrogame::Application::new();
+    let mut sandbox = ferrogame::Application::new();
     sandbox.run();
 }
