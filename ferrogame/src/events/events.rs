@@ -41,8 +41,4 @@ impl Event {
             Event::WindowClosed => EventCategory::Window,
         }
     }
-
-    pub fn dispatch_event() {
-        //TODO
-    }
 }
