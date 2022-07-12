@@ -1,12 +1,11 @@
-use crate::{logger, window, events::eventlistener::EventListener};
+use crate::{logger, window};
 
 pub struct Application {
     window: window::Window,
 }
 
 impl Application {
-    pub fn new(eventlistener: Box<dyn EventListener>) -> Application {
-        let window = window::Window::new("Ferrogame", 1080, 720, true, eventlistener);
+    pub fn new(window: window::Window) -> Application {
         Application {
             window 
         }
