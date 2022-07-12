@@ -8,5 +8,4 @@ edition = "2021"
 [dependencies]
 chrono = "0.4.19"
 glfw = "0.45.0"
-colored = "2.0.0"
-gl = "0.14.0"
+wgpu = "0.13"

@@ -1,4 +1,5 @@
 fn main() {
-    let mut sandbox = ferrogame::Application::new();
+    let eventlistener = sandbox::eventlistener::EventListener {};
+    let mut sandbox = ferrogame::Application::new(Box::new(eventlistener));
     sandbox.run();
 }
