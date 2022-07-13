@@ -1,6 +1,6 @@
-pub mod events; 
+pub mod event; 
 pub mod eventdispatcher;
 pub mod eventlistener;
 pub mod key;
-pub use events::*;
+pub use event::*;
 pub use key::*;

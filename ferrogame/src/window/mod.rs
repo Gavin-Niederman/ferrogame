@@ -1,8 +1,9 @@
 use std::sync::mpsc::Receiver;
 use glfw::{WindowEvent, Context};
 
+use crate::event::Event;
 use crate::logger;
-use crate::events::{self, eventlistener::EventListener, eventdispatcher::EventDispatcher};
+use crate::event::{self, eventlistener::EventListener, eventdispatcher::EventDispatcher};
 
 pub struct Window {
     title: String,
@@ -14,29 +15,33 @@ pub struct Window {
     glfw: glfw::Glfw,
     shouldclose: bool,
     eventdispatcher: EventDispatcher,
+    wgpu_instance: wgpu::Instance,
 }
 
 impl Window {
     pub fn new(title: &str, width: u32, height: u32, vsync: bool, eventlistener: Box<dyn EventListener>) -> Window {
         logger::info("Creating window...".to_string());
         let mut glfw = glfw::init(glfw::FAIL_ON_ERRORS).unwrap();
-        let (mut window, events) = glfw.create_window(width, height, title, glfw::WindowMode::Windowed)
+        let (mut glfw_window, events) = glfw.create_window(width, height, title, glfw::WindowMode::Windowed)
             .expect("Failed to create GLFW window.");
-        glfw.make_context_current(Some(&window));
+        glfw.make_context_current(Some(&glfw_window));
         logger::info("Window created sucessfully.".to_string());
-        window.make_current();
-        window.set_all_polling(true);
-        Window {
+        glfw_window.make_current();
+        glfw_window.set_all_polling(true);
+        let mut window = Window {
             title: title.to_string(),
             width,
             height,
             vsync,
-            window,
+            window: glfw_window,
             reciever: events,
             glfw,
             shouldclose: false,
             eventdispatcher: EventDispatcher::new(eventlistener),
-        }
+            wgpu_instance: wgpu::Instance::new(wgpu::Backends::VULKAN),
+        };
+        window.set_vsync(vsync);
+        window
     }
 
     pub fn get_width(&self) -> u32 {
@@ -80,42 +85,42 @@ impl Window {
         for (_, event) in glfw::flush_messages(&self.reciever) {
             match event {
                 WindowEvent::Close => {
-                    let event = events::Event::WindowClosed;
+                    let event = Event::new(event::EventType::WindowClosed);
                     self.eventdispatcher.dispatch_event(&event);
                     self.shouldclose = true;
                 },
                 WindowEvent::Key(key, _, action, _) => {
                     let event = match action {
-                        glfw::Action::Press => events::Event::KeyPressed(events::Key::from_glfw_key(key), false),
-                        glfw::Action::Release => events::Event::KeyReleased(events::Key::from_glfw_key(key)),
-                        glfw::Action::Repeat => events::Event::KeyPressed(events::Key::from_glfw_key(key), true),
+                        glfw::Action::Press => Event::new(event::EventType::KeyPressed(event::Key::from_glfw_key(key), false)),
+                        glfw::Action::Release => Event::new(event::EventType::KeyReleased(event::Key::from_glfw_key(key))),
+                        glfw::Action::Repeat => Event::new(event::EventType::KeyPressed(event::Key::from_glfw_key(key), true)),
                     };
                     self.eventdispatcher.dispatch_event(&event);
                 },
                 WindowEvent::MouseButton(button, action, _) => {
                     let event = match action {
-                        glfw::Action::Press => events::Event::MouseButtonPressed(events::MouseButton::from_glfw_mouse_button(button)),
-                        glfw::Action::Release => events::Event::MouseButtonReleased(events::MouseButton::from_glfw_mouse_button(button)),
-                        _ => events::Event::MouseButtonPressed(events::MouseButton::from_glfw_mouse_button(button)),
+                        glfw::Action::Press => Event::new(event::EventType::MouseButtonPressed(event::MouseButton::from_glfw_mouse_button(button))),
+                        glfw::Action::Release => Event::new(event::EventType::MouseButtonReleased(event::MouseButton::from_glfw_mouse_button(button))),
+                        _ => Event::new(event::EventType::MouseButtonPressed(event::MouseButton::from_glfw_mouse_button(button))),
                     };
                     self.eventdispatcher.dispatch_event(&event);
                 },
                 WindowEvent::CursorPos(x, y) => {
-                    let event = events::Event::MouseMoved((x, y));
+                    let event = Event::new(event::EventType::MouseMoved((x, y)));
                     self.eventdispatcher.dispatch_event(&event);
                 },
                 WindowEvent::Scroll(x, y) => {
-                    let event = events::Event::MouseScrolled(x, y);
+                    let event = Event::new(event::EventType::MouseScrolled((x, y)));
                     self.eventdispatcher.dispatch_event(&event);
                 },
                 WindowEvent::Focus(focused) => {
                     if focused { 
-                        let event = events::Event::WindowFocused; 
+                        let event = Event::new(event::EventType::WindowFocused); 
                         self.eventdispatcher.dispatch_event(&event);
                     }
                 },
                 WindowEvent::Iconify(_) => {
-                    let event = events::Event::WindowMinimized;
+                    let event = Event::new(event::EventType::WindowMinimized);
                     self.eventdispatcher.dispatch_event(&event);
                 },
                 _ => {}
