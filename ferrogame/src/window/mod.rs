@@ -20,7 +20,7 @@ impl Window {
     pub fn new(title: &str, width: u32, height: u32, vsync: bool, eventlistener: Box<dyn EventListener>) -> Window {
         logger::info("Creating window...".to_string());
         let mut glfw = glfw::init(glfw::FAIL_ON_ERRORS).unwrap();
-        let (mut window, events) = glfw.create_window(width, height, &title, glfw::WindowMode::Windowed)
+        let (mut window, events) = glfw.create_window(width, height, title, glfw::WindowMode::Windowed)
             .expect("Failed to create GLFW window.");
         glfw.make_context_current(Some(&window));
         logger::info("Window created sucessfully.".to_string());
@@ -40,19 +40,19 @@ impl Window {
     }
 
     pub fn get_width(&self) -> u32 {
-        return self.width;
+        self.width
     }
 
     pub fn get_height(&self) -> u32 {
-        return self.height;
+        self.height
     }
 
     pub fn get_vsync(&self) -> bool {
-        return self.vsync;
+        self.vsync
     }
 
     pub fn should_close(&self) -> bool {
-        return self.shouldclose;
+        self.shouldclose
     }
 
     pub fn set_vsync(&mut self, vsync: bool) {

@@ -1,3 +1,5 @@
+/// # Key
+/// The Key enum contains variants for all keys
 pub enum Key {
     A,
     B,
@@ -104,6 +106,8 @@ pub enum Key {
 }
 
 impl Key {
+    /// # from_glfw_key
+    /// Converts a glfw key to a ferrogame key
     pub fn from_glfw_key(key: glfw::Key) -> Key {
         match key {
             glfw::Key::A => Key::A,
@@ -202,6 +206,8 @@ impl Key {
     }
 } 
 
+/// # MouseButton
+/// The Mousebutton enum contains variants for all mouse buttons
 pub enum MouseButton {
     Button1,
     Button2,
@@ -214,6 +220,8 @@ pub enum MouseButton {
 }
 
 impl MouseButton {
+    /// # from_glfw_mouse_button
+    /// Converts a glfw mouse button to a ferrogame mouse button
     pub fn from_glfw_mouse_button(button: glfw::MouseButton) -> MouseButton {
         match button {
             glfw::MouseButton::Button1 => MouseButton::Button1,

@@ -1,5 +1,7 @@
 use chrono;
 
+//This is going to be re-written to use log and termcolor because this is actually cancer.
+
 pub fn info(message: String) {
     println!("\x1b[38;5;247m[{}] \x1b[1;32m[INFO] {}\x1b[0m", chrono::offset::Local::now().time(), message);
 }

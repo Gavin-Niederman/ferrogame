@@ -1,12 +1,6 @@
-/// The Event enum contains variants for all events
-/// 
-/// # What they store
-/// - 'KeyPressed(i32, bool)' (keycode, repeat)
-/// - 'KeyReleased(i32)' (keycode)
-/// - 'MouseButtonPressed(i32,)')
-/// - 'MouseButtonReleased(i32,)')
-/// - 'MouseMoved((f32, f32))' ((x, y))
-/// - 'MouseScrolled(i32)' (xOffset, yOffset)
+/// # Event
+/// The event enum contains variants for all events, each variant stores important data for the event.
+/// For instance the MouseMoved event stores the mouse position moved to. 
 pub enum Event {
     KeyPressed(super::Key, bool),
     KeyReleased(super::Key),
@@ -20,6 +14,11 @@ pub enum Event {
     WindowClosed,
 }
 
+/// # EventCategory
+/// The EventCategory enum contains three variants:
+/// - Key(Key being pressed or released etc.)
+/// - Mouse(Mouse button being pressed or released etc.)
+/// - Window(closed, focused etc.)
 pub enum EventCategory {
     Key,
     Mouse,
