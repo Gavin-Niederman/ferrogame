@@ -3,7 +3,7 @@ use glfw::{WindowEvent, Context};
 
 use crate::event::Event;
 use crate::logger;
-use crate::event::{self, eventlistener::EventListener, eventdispatcher::EventDispatcher};
+use crate::event::{self, eventdispatcher::EventDispatcher};
 
 pub struct Window {
     title: String,
@@ -15,15 +15,19 @@ pub struct Window {
     glfw: glfw::Glfw,
     shouldclose: bool,
     eventdispatcher: EventDispatcher,
-    wgpu_instance: wgpu::Instance,
+    //wgpu_instance: wgpu::Instance,
 }
 
 impl Window {
-    pub fn new(title: &str, width: u32, height: u32, vsync: bool, eventlistener: Box<dyn EventListener>) -> Window {
+    pub fn new(title: &str, width: u32, height: u32, vsync: bool, eventdispatcher: EventDispatcher) -> Window {
         logger::info("Creating window...".to_string());
         let mut glfw = glfw::init(glfw::FAIL_ON_ERRORS).unwrap();
-        let (mut glfw_window, events) = glfw.create_window(width, height, title, glfw::WindowMode::Windowed)
-            .expect("Failed to create GLFW window.");
+        let (mut glfw_window, events) = glfw.create_window(
+            width, 
+            height, 
+            title, 
+            glfw::WindowMode::Windowed
+        ).expect("Failed to create GLFW window.");
         glfw.make_context_current(Some(&glfw_window));
         logger::info("Window created sucessfully.".to_string());
         glfw_window.make_current();
@@ -37,8 +41,8 @@ impl Window {
             reciever: events,
             glfw,
             shouldclose: false,
-            eventdispatcher: EventDispatcher::new(eventlistener),
-            wgpu_instance: wgpu::Instance::new(wgpu::Backends::VULKAN),
+            eventdispatcher,
+            //wgpu_instance: wgpu::Instance::new(wgpu::Backends::VULKAN),
         };
         window.set_vsync(vsync);
         window
@@ -79,6 +83,7 @@ impl Window {
         self.window.swap_buffers();
         self.glfw.poll_events();
         self.create_events();
+        self.eventdispatcher.dispatch_update();
     }
 
     fn create_events(&mut self) {
