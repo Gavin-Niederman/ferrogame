@@ -2,7 +2,6 @@ use std::sync::mpsc::Receiver;
 use glfw::{WindowEvent, Context};
 
 use crate::event::Event;
-use crate::logger;
 use crate::event::{self, eventdispatcher::EventDispatcher};
 
 pub struct Window {
@@ -20,7 +19,7 @@ pub struct Window {
 
 impl Window {
     pub fn new(title: &str, width: u32, height: u32, vsync: bool, eventdispatcher: EventDispatcher) -> Window {
-        logger::info("Creating window...".to_string());
+        log::info!("Creating window...");
         let mut glfw = glfw::init(glfw::FAIL_ON_ERRORS).unwrap();
         let (mut glfw_window, events) = glfw.create_window(
             width, 
@@ -29,7 +28,7 @@ impl Window {
             glfw::WindowMode::Windowed
         ).expect("Failed to create GLFW window.");
         glfw.make_context_current(Some(&glfw_window));
-        logger::info("Window created sucessfully.".to_string());
+        log::info!("Window created sucessfully.");
         glfw_window.make_current();
         glfw_window.set_all_polling(true);
         let mut window = Window {

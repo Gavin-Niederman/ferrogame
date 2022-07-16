@@ -1,19 +1,30 @@
 use chrono;
+use fern::colors::{ColoredLevelConfig, Color};
 
-//This is going to be re-written to use log and termcolor because this is actually cancer.
-
-pub fn info(message: String) {
-    println!("\x1b[38;5;247m[{}] \x1b[1;32m[INFO] {}\x1b[0m", chrono::offset::Local::now().time(), message);
-}
-
-pub fn warn(message: String) {
-    println!("\x1b[38;5;247m[{}] \x1b[1;33m[WARN] {}\x1b[0m", chrono::offset::Local::now().time() , message);
-}
-
-pub fn error(message: String) {
-    println!("\x1b[38;5;247m[{}] \x1b[1;41m\x1b[38;5;232m[ERROR] {}\x1b[0m", chrono::offset::Local::now().time() , message);
-}
-
-pub fn debug(message: String) {
-    println!("\x1b[38;5;247m[{}] \x1b[38;5;32m[DEBUG] {}\x1b[0m", chrono::offset::Local::now().time() , message);
+pub(crate) fn setup_logger() -> Result<(), fern::InitError> {
+    let colors = ColoredLevelConfig::new()
+        .warn(Color::Yellow)
+        .error(Color::Red)
+        .info(Color::Green)
+        .debug(Color::Blue)
+        .trace(Color::BrightMagenta);
+    fern::Dispatch::new().format(move |out, message, record| {
+        out.finish(format_args!(
+            "[{}][{}][{}]{}{}{}",
+            chrono::offset::Local::now().time(),
+            record.target().split("::").next().unwrap(),
+            colors.color(record.level()),
+            format_args!(
+                "\x1B[{}m",
+                colors.get_color(&record.level()).to_fg_str()
+            ),
+            message,
+            "\x1B[0m",
+        ))
+    })
+    .level(log::LevelFilter::Debug)
+    .chain(std::io::stdout())
+    .chain(fern::log_file("output.log")?)
+    .apply()?;
+    Ok(())
 }

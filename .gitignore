@@ -3,3 +3,4 @@ ferrogame/Cargo.lock
 sandbox/target
 sandbox/Cargo.lock
 .vscode
+sandbox/output.log

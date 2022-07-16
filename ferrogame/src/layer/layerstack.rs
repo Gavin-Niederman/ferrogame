@@ -1,4 +1,4 @@
-use crate::{event::Event, logger};
+use crate::event::Event;
 use super::layer::Layer;
 
 pub struct LayerStack {
@@ -31,8 +31,7 @@ impl LayerStack {
             overlay.on_event(event);
         }
         for layer in self.layers.iter().rev() {
-            logger::debug("LayerStack::dispatch_event()".to_string()); //this is called
-            layer.on_event(event); //this is not
+            layer.on_event(event);
         }
     }
 
