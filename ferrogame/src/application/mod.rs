@@ -1,5 +1,4 @@
 use std::rc::Rc;
-
 use crate::{logger, window, layer::{layer , layerstack}, event::eventdispatcher::EventDispatcher};
 
 pub struct Application {
@@ -24,6 +23,7 @@ impl Application {
             1080, 
             720, 
             true,
+            144,
             eventdispatcher,
         );
         let application = Application {
@@ -35,11 +35,6 @@ impl Application {
     }
     
     pub fn run(&mut self) {
-        log::error!("This is what an error looks like.");
-        log::warn!("This is what a warning looks like.");
-        log::info!("This is what info looks like.");
-        log::debug!("This is what debug text looks like.");
-        log::trace!("This is what trace text looks like.");
         log::info!("Started application");
         while !self.window.should_close() {
             self.window.on_update();

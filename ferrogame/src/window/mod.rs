@@ -9,6 +9,7 @@ pub struct Window {
     width: u32,
     height: u32,
     vsync: bool,
+    frameratecap: u32,
     window: glfw::Window,
     reciever: Receiver<(f64, WindowEvent)>,
     glfw: glfw::Glfw,
@@ -18,7 +19,7 @@ pub struct Window {
 }
 
 impl Window {
-    pub fn new(title: &str, width: u32, height: u32, vsync: bool, eventdispatcher: EventDispatcher) -> Window {
+    pub fn new(title: &str, width: u32, height: u32, vsync: bool, frameratecap: u32, eventdispatcher: EventDispatcher) -> Window {
         log::info!("Creating window...");
         let mut glfw = glfw::init(glfw::FAIL_ON_ERRORS).unwrap();
         let (mut glfw_window, events) = glfw.create_window(
@@ -36,6 +37,7 @@ impl Window {
             width,
             height,
             vsync,
+            frameratecap,
             window: glfw_window,
             reciever: events,
             glfw,
@@ -57,6 +59,10 @@ impl Window {
 
     pub fn get_vsync(&self) -> bool {
         self.vsync
+    }
+
+    pub fn get_frameratecap(&self) -> u32 {
+        self.frameratecap
     }
 
     pub fn should_close(&self) -> bool {

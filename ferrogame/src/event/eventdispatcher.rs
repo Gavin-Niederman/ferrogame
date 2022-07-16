@@ -22,4 +22,3 @@ impl EventDispatcher {
         self.layerstack.on_update();
     }
 }
-
