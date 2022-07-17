@@ -15,7 +15,7 @@ pub(crate) fn setup_logger() -> Result<(), fern::InitError> {
     .error(Color::Red)
     .info(Color::Green)
     .debug(Color::Blue)
-    .trace(Color::BrightMagenta);
+    .trace(Color::Magenta);
     fern::Dispatch::new().format(move |out, message, record| {
         out.finish(format_args!(
             "[{}][{}][{}]{}{}{}",
@@ -30,7 +30,7 @@ pub(crate) fn setup_logger() -> Result<(), fern::InitError> {
             "\x1B[0m",
         ))
     })
-    .level(log::LevelFilter::Debug)
+    .level(log::LevelFilter::Trace)
     .chain(std::io::stdout())
     .apply()?;
     println!("\n{}\n\n", BANNER);

@@ -65,6 +65,10 @@ impl Window {
         self.frameratecap
     }
 
+    pub fn get_glfw_window(&mut self) -> &mut glfw::Window {
+        &mut self.window
+    }
+
     pub fn should_close(&self) -> bool {
         self.shouldclose
     }
